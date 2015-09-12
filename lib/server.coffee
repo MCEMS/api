@@ -1,6 +1,6 @@
-Hapi = require('hapi');
+Hapi = require 'hapi'
 
-server = new Hapi.Server();
+server = new Hapi.Server()
 server.connection
   port: process.env.PORT || 3000
 

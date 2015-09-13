@@ -4,7 +4,10 @@ var coffeelint = require('gulp-coffeelint');
 var mocha = require('gulp-mocha');
 
 gulp.task('lint', function() {
-  gulp.src('./lib/**/*.coffee')
+  return gulp.src([
+      './lib/**/*.coffee',
+      './migrations/*.coffee'
+    ])
     .pipe(coffeelint())
     .pipe(coffeelint.reporter())
     .pipe(coffeelint.reporter('fail'));

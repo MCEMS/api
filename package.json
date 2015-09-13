@@ -4,7 +4,8 @@
   "description": "The MCEMS API",
   "scripts": {
     "test": "gulp",
-    "start": "coffee lib/"
+    "start": "coffee lib/",
+    "postinstall": "node_modules/.bin/sequelize --env production --coffee db:migrate"
   },
   "repository": {
     "type": "git",
@@ -17,7 +18,12 @@
   "homepage": "https://github.com/MCEMS/api",
   "dependencies": {
     "coffee-script": "^1.10.0",
-    "hapi": "^10.0.0"
+    "hapi": "^10.0.0",
+    "pg": "^4.4.1",
+    "pg-hstore": "^2.3.2",
+    "sequelize-cli": "^1.9.1",
+    "js2coffee": "^2.1.0",
+    "sequelize": "^3.8.0"
   },
   "devDependencies": {
     "gulp": "^3.9.0",

@@ -1,0 +1,7 @@
+var path = require('path');
+
+module.exports = {
+  'config': 'sequelize.json',
+  'models-path': path.resolve('lib', 'models')
+};
+

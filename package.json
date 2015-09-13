@@ -5,7 +5,7 @@
   "scripts": {
     "test": "gulp",
     "start": "coffee lib/",
-    "postinstall": "node_modules/.bin/sequelize --env production --coffee db:migrate"
+    "postinstall": "node_modules/.bin/sequelize db:migrate --env production --coffee"
   },
   "repository": {
     "type": "git",

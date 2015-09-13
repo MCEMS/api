@@ -1,0 +1,8 @@
+{
+  "name": "MCEMS API",
+  "repository": "https://github.com/MCEMS/api",
+  "addons": [
+    "heroku-postgresql"
+  ]
+}
+

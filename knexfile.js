@@ -18,7 +18,7 @@ module.exports = {
 
   test: {
     client: 'postgresql',
-    connection: process.env.DATABASE_URL || {
+    connection: {
       database: 'mcems_test',
       user: 'postgres',
       password: 'postgres'
@@ -26,6 +26,18 @@ module.exports = {
     pool: {
       min: 2,
       max: 10
+    },
+    migrations: {
+      tableName: 'knex_migrations'
+    }
+  },
+
+  travis: {
+    client: 'postgresql',
+    connection: process.env.DATABASE_URL,
+    pool: {
+      min: 2,
+      max: 15
     },
     migrations: {
       tableName: 'knex_migrations'

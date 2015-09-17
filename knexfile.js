@@ -18,7 +18,11 @@ module.exports = {
 
   test: {
     client: 'postgresql',
-    connection: process.env.DATABASE_URL,
+    connection: process.env.DATABASE_URL || {
+      database: 'mcems_test',
+      user: 'postgres',
+      password: 'postgres'
+    },
     pool: {
       min: 2,
       max: 10

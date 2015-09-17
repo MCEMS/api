@@ -1,3 +1,5 @@
+Boom = require 'boom'
+
 module.exports = (server) ->
 
   Person = server.plugins['bookshelf']['Person']
@@ -11,5 +13,6 @@ module.exports = (server) ->
       .then (people) ->
         reply people
       .catch (error) ->
-        reply { error: error }
+        console.error error
+        reply Boom.badImplementation()
 

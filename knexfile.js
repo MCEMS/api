@@ -34,10 +34,14 @@ module.exports = {
 
   travis: {
     client: 'postgresql',
-    connection: process.env.DATABASE_URL,
+    connection: {
+      database: 'travis',
+      user: 'postgres',
+      password: ''
+    },
     pool: {
-      min: 2,
-      max: 15
+      min: 1,
+      max: 5
     },
     migrations: {
       tableName: 'knex_migrations'

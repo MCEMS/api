@@ -4,6 +4,7 @@
   "description": "The MCEMS API",
   "scripts": {
     "test": "gulp",
+    "postinstall": "knex migrate:latest",
     "start": "coffee lib/"
   },
   "repository": {

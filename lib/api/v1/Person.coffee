@@ -5,7 +5,7 @@ module.exports = (server) ->
 
   Person = server.plugins['bookshelf']['Person']
 
-  # Get people
+  # Get a list (jsonarray) of people
   server.route
     method: 'GET'
     path: '/api/v1/person'
@@ -17,6 +17,7 @@ module.exports = (server) ->
         console.error error
         reply Boom.badImplementation()
 
+  # Get one person by id
   server.route
     method: 'GET'
     path: '/api/v1/person/{id}'
@@ -37,6 +38,7 @@ module.exports = (server) ->
         reply Boom.badImplementation()
         console.error error
 
+  # Add a new user
   server.route
     method: 'POST'
     path: '/api/v1/person'
@@ -59,6 +61,7 @@ module.exports = (server) ->
         reply Boom.badImplementation()
         console.error error
 
+  # Delete a person by id
   server.route
     method: 'DELETE'
     path: '/api/v1/person/{id}'
@@ -78,6 +81,7 @@ module.exports = (server) ->
         reply Boom.badImplementation()
         console.error error
 
+  # Select a person by id and update their information
   server.route
     method: 'PUT'
     path: '/api/v1/person/{id}'

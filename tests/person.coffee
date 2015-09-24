@@ -15,7 +15,7 @@ describe 'Person', ->
       done()
 
   beforeEach (done) ->
-    bookshelf.knex('Person').truncate()
+    bookshelf.knex('Person').delete()
     .then ->
       done()
     .catch ->
@@ -166,7 +166,7 @@ describe 'Person', ->
     it 'does not update a non-existent person', (done) ->
       req =
         method: 'PUT'
-        url: '/api/v1/person/42'
+        url: '/api/v1/person/1'
         payload:
           first_name: 'First'
           last_name: 'Last'
@@ -174,7 +174,7 @@ describe 'Person', ->
         res.statusCode.should.equal 404
         req2 =
           method: 'GET'
-          url: '/api/v1/person/42'
+          url: '/api/v1/person/1'
         server.inject req2, (res2) ->
           res2.statusCode.should.equal 404
           done()

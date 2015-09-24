@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/MCEMS/api",
   "dependencies": {
+    "bcrypt": "^0.8.5",
     "bookshelf": "^0.8.2",
     "boom": "^2.8.0",
     "coffee-script": "^1.10.0",

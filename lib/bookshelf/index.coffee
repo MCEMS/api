@@ -8,9 +8,13 @@ bookshelf = require('bookshelf')(knex)
 Person = bookshelf.Model.extend
   tableName: 'Person'
 
+Account = bookshelf.Model.extend
+  tableName: 'Account'
+
 module.exports.register = (server, options, next) ->
   server.expose 'bookshelf', bookshelf
   server.expose 'Person', Person
+  server.expose 'Account', Account
   next()
 
 module.exports.register.attributes =

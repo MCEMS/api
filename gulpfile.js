@@ -12,7 +12,12 @@ gulp.task('lint', function() {
 
 gulp.task('test', function() {
   return gulp.src('./tests/*.coffee')
-    .pipe(mocha());
+    .pipe(mocha())
+    .once('error', function() {
+      process.exit(1);
+    });
 });
 
-gulp.task('default', [ 'lint', 'test' ]);
+gulp.task('default', [ 'lint', 'test' ], function() {
+  process.exit(0);
+});

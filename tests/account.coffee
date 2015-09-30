@@ -2,209 +2,223 @@ require 'coffee-script'
 
 should = require 'should'
 utils = require './utils'
-Person = utils.Person
+Account = utils.Account
 server = utils.server
 
-describe 'Person', ->
+describe 'Account', ->
+
   beforeEach (done) ->
-    utils.knex('Person').delete()
+    utils.knex('Account').delete()
     .then ->
       done()
     .catch ->
       done()
 
   describe 'List', ->
-    it 'returns an empty array when there are no people', (done) ->
+    it 'returns an empty array when there are no accounts', (done) ->
       request =
         method: 'GET'
-        url: '/api/v1/person'
+        url: '/api/v1/account'
       server.inject request, (response) ->
         response.statusCode.should.equal 200
         JSON.parse(response.payload).should.be.an.Array
         JSON.parse(response.payload).should.be.empty()
         done()
 
-    it 'returns an array containing a person', (done) ->
-      new Person
-        first_name: 'Malcolm'
-        last_name: 'Reynolds'
-      .save()
-      .then (person) ->
-        request =
-          method: 'GET'
-          url: '/api/v1/person'
-        server.inject request, (response) ->
-          p = JSON.parse(response.payload)
-          response.statusCode.should.equal 200
-          p.should.be.an.Array
-          p.should.not.be.empty()
-          p.should.have.length 1
-          p[0].should.be.an.Object
-          p[0].should.have.keys 'id', 'first_name', 'last_name'
-          done()
-      .catch ->
-        should.fail()
-
-  describe 'Create', ->
-    it 'creates and reads a person', (done) ->
+    it 'creates and reads an account', (done) ->
       req1 =
         method: 'POST'
-        url: '/api/v1/person'
+        url: '/api/v1/account'
         payload:
-          first_name: 'Bob'
-          last_name: 'Jones'
+          username: 'test'
+          password: 'letmein'
+      server.inject req1, (res1) ->
+        req2 =
+          method: 'GET'
+          url: '/api/v1/account'
+        server.inject req2, (res2) ->
+          p2 = JSON.parse res2.payload
+          res2.statusCode.should.equal 200
+          p2.should.be.an.Array
+          p2.length.should.equal 1
+          p2[0].should.be.an.Object
+          p2[0].should.have.keys 'id', 'username'
+          p2[0].should.not.have.keys 'password'
+          done()
+
+  describe 'Create', ->
+    it 'creates and reads an account', (done) ->
+      req1 =
+        method: 'POST'
+        url: '/api/v1/account'
+        payload:
+          username: 'test'
+          password: 'letmein'
       server.inject req1, (res1) ->
         p1 = JSON.parse res1.payload
         res1.statusCode.should.equal 200
         p1.should.be.an.Object
-        p1.should.have.keys 'id', 'first_name', 'last_name'
-        p1.first_name.should.equal 'Bob'
-        p1.last_name.should.equal 'Jones'
+        p1.should.have.keys 'id', 'username'
+        p1.should.not.have.keys 'password'
+        p1.username.should.equal 'test'
         req2 =
           method: 'GET'
-          url: '/api/v1/person/' + p1.id
+          url: '/api/v1/account/' + p1.id
         server.inject req2, (res2) ->
           p2 = JSON.parse res2.payload
           res2.statusCode.should.equal 200
           p2.should.be.an.Object
-          p1.should.have.keys 'id', 'first_name', 'last_name'
-          p2.first_name.should.equal 'Bob'
-          p2.last_name.should.equal 'Jones'
+          p2.should.have.keys 'id', 'username'
+          p2.should.not.have.keys 'password'
+          p2.username.should.equal 'test'
           p2.id.should.equal p1.id
           done()
 
-    it 'does not create a person when parameters are invalid', (done) ->
+    it 'does not create an when parameters are invalid', (done) ->
       req =
         method: 'POST'
-        url: '/api/v1/person'
+        url: '/api/v1/account'
       server.inject req, (res) ->
         res.statusCode.should.equal 400 # Bad Request
         done()
 
+    it 'does not allow duplicate usernames to be created', (done) ->
+      req =
+        method: 'POST'
+        url: '/api/v1/account'
+        payload:
+          username: 'test'
+          password: 'pw1'
+      server.inject req, (res1) ->
+        server.inject req, (res2) ->
+          res1.statusCode.should.equal 200
+          res2.statusCode.should.equal 409 # Conflict
+          done()
+
   describe 'Read', ->
-    it 'sends 404 when requested person is not found', (done) ->
+    it 'sends 404 when requested account is not found', (done) ->
       req =
         method: 'GET'
-        url: '/api/v1/person/1'
+        url: '/api/v1/account/1'
       server.inject req, (res) ->
         res.statusCode.should.equal 404 # Not Found
         done()
 
-    it 'sends 400 when requested person is invalid', (done) ->
+    it 'sends 400 when requested account is invalid', (done) ->
       req =
         method: 'GET'
-        url: '/api/v1/person/notaperson'
+        url: '/api/v1/account/notreal'
       server.inject req, (res) ->
         res.statusCode.should.equal 400 # Bad Request
         done()
 
   describe 'Update', ->
-    it 'updates a person', (done) ->
+    it 'updates an account', (done) ->
       req1 =
         method: 'POST'
-        url: '/api/v1/person'
+        url: '/api/v1/account'
         payload:
-          first_name: 'Bob'
-          last_name: 'Jones'
+          username: 'test'
+          password: 'letmein'
       server.inject req1, (res1) ->
         p1 = JSON.parse res1.payload
         req2 =
           method: 'PUT'
-          url: '/api/v1/person/' + p1.id
+          url: '/api/v1/account/' + p1.id
           payload:
-            first_name: 'Amy'
-            last_name: 'Smith'
+            username: 'test2'
+            password: 'letuin'
         server.inject req2, (res2) ->
           res2.statusCode.should.equal 200
           p2 = JSON.parse res2.payload
           p2.should.be.an.Object
-          p2.should.have.keys 'id', 'first_name', 'last_name'
-          p2.first_name.should.equal 'Amy'
-          p2.last_name.should.equal 'Smith'
+          p2.should.have.keys 'id', 'username'
+          p2.should.not.have.keys 'password'
+          p2.username.should.equal 'test2'
           done()
 
-    it 'does not update a person for invalid payload', (done) ->
+    it 'does not update an account for invalid payload', (done) ->
       req1 =
         method: 'POST'
-        url: '/api/v1/person'
+        url: '/api/v1/account'
         payload:
-          first_name: 'Bob'
-          last_name: 'Jones'
+          username: 'test'
+          password: 'letmein'
       server.inject req1, (res1) ->
         p1 = JSON.parse res1.payload
         req2 =
           method: 'PUT'
-          url: '/api/v1/person/' + p1.id
+          url: '/api/v1/account/' + p1.id
           payload:
-            first_name: 'Only a first'
+            username: 'no-password'
         server.inject req2, (res2) ->
           res2.statusCode.should.equal 400 # Bad request
           done()
 
-    it 'does not update a person for invalid ID', (done) ->
+    it 'does not update an account for invalid ID', (done) ->
       req =
         method: 'PUT'
-        url: '/api/v1/person/NotAPerson'
+        url: '/api/v1/account/aaa'
         payload:
-          first_name: 'First'
-          last_name: 'Last'
+          username: 'usr'
+          password: 'pass'
       server.inject req, (res) ->
         res.statusCode.should.equal 400 # Bad request
         done()
 
-    it 'does not update a non-existent person', (done) ->
+    it 'does not update a non-existent account', (done) ->
       req =
         method: 'PUT'
-        url: '/api/v1/person/1'
+        url: '/api/v1/account/1'
         payload:
-          first_name: 'First'
-          last_name: 'Last'
+          username: 'user'
+          password: 'pass'
       server.inject req, (res) ->
         res.statusCode.should.equal 404
         req2 =
           method: 'GET'
-          url: '/api/v1/person/1'
+          url: '/api/v1/account/1'
         server.inject req2, (res2) ->
           res2.statusCode.should.equal 404
           done()
 
   describe 'Delete', ->
-    it 'deletes a person', (done) ->
+    it 'deletes an account', (done) ->
       req1 =
         method: 'POST'
-        url: '/api/v1/person'
+        url: '/api/v1/account'
         payload:
-          first_name: 'Bob'
-          last_name: 'Jones'
+          username: 'user'
+          password: 'letmein'
       server.inject req1, (res1) ->
         p1 = JSON.parse res1.payload
         req2 =
           method: 'DELETE'
-          url: '/api/v1/person/' + p1.id
+          url: '/api/v1/account/' + p1.id
         server.inject req2, (res2) ->
           res2.statusCode.should.equal 204 # No Content
           res2.payload.should.be.empty()
           req3 =
             method: 'GET'
-            url: '/api/v1/person'
+            url: '/api/v1/account'
           server.inject req3, (res3) ->
             res3.statusCode.should.equal 200
             JSON.parse(res3.payload).should.be.an.Array
             JSON.parse(res3.payload).should.be.empty()
             done()
 
-    it 'returns an error when trying to delete an invalid person', (done) ->
+    it 'returns an error when trying to delete an invalid account', (done) ->
       req =
         method: 'DELETE'
-        url: '/api/v1/person/NotAPerson'
+        url: '/api/v1/account/not-real'
       server.inject req, (res) ->
         res.statusCode.should.equal 400 # Bad Request
         done()
 
-    it 'returns an error when deleting a non-existent person', (done) ->
+    it 'returns an error when deleting a non-existent account', (done) ->
       req =
         method: 'DELETE'
-        url: '/api/v1/person/1'
+        url: '/api/v1/account/1'
       server.inject req, (res) ->
         res.statusCode.should.equal 404 # Not Found
         done()

@@ -1,6 +1,12 @@
 {
   "name": "MCEMS API",
   "repository": "https://github.com/MCEMS/api",
+  "env": {
+    "TOKEN_SIGNING_SECRET": {
+      "description": "A secret key for signing/verifying session tokens",
+      "generator": "secret"
+    }
+  },
   "addons": [
     "heroku-postgresql"
   ]

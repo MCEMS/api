@@ -9,6 +9,9 @@ module.exports = (server) ->
   server.route
     method: 'GET'
     path: '/api/v1/person'
+    config:
+      auth:
+        scope: [ 'admin' ]
     handler: (request, reply) ->
       Person.collection().fetch()
       .then (people) ->
@@ -22,6 +25,8 @@ module.exports = (server) ->
     method: 'GET'
     path: '/api/v1/person/{id}'
     config:
+      auth:
+        scope: [ 'admin' ]
       validate:
         params:
           id: Joi.number().integer().min(1).required()
@@ -43,6 +48,8 @@ module.exports = (server) ->
     method: 'POST'
     path: '/api/v1/person'
     config:
+      auth:
+        scope: [ 'admin' ]
       validate:
         payload:
           first_name: Joi.string().required()
@@ -66,6 +73,8 @@ module.exports = (server) ->
     method: 'DELETE'
     path: '/api/v1/person/{id}'
     config:
+      auth:
+        scope: [ 'admin' ]
       validate:
         params:
           id: Joi.number().integer().min(1).required()
@@ -86,6 +95,8 @@ module.exports = (server) ->
     method: 'PUT'
     path: '/api/v1/person/{id}'
     config:
+      auth:
+        scope: [ 'admin' ]
       validate:
         params:
           id: Joi.number().integer().min(1).required()

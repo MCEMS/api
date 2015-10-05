@@ -27,10 +27,10 @@ fingerprint = (request) ->
 # fingerprint.
 #
 # This method should never be called externally, but is exposed for testing.
-_generateTokenRaw = (subject, scopes, fingerprint) ->
+_generateTokenRaw = (subject, scopes, fp) ->
   JWT.sign
     scope: scopes
-    f: fingerprint
+    f: fp
   , JWS_SECRET,
     expiresInSeconds: JWS_TTL
     subject: subject
@@ -41,8 +41,8 @@ generateToken = (account, request) ->
   scopes = []
   account.related('scopes').forEach (scope) ->
     scopes.push scope.get('key')
-  fingerprint = fingerprint request
-  token = _generateTokenRaw account.id, scopes, fingerprint
+  fp = fingerprint request
+  token = _generateTokenRaw account.id, scopes, fp
   return {
     token: token
     expiresInSeconds: JWS_TTL

@@ -19,6 +19,7 @@ describe 'Account', ->
       request =
         method: 'GET'
         url: '/api/v1/account'
+        credentials: utils.credentials
       server.inject request, (response) ->
         response.statusCode.should.equal 200
         JSON.parse(response.payload).should.be.an.Array
@@ -32,10 +33,12 @@ describe 'Account', ->
         payload:
           username: 'test'
           password: 'letmein'
+        credentials: utils.credentials
       server.inject req1, (res1) ->
         req2 =
           method: 'GET'
           url: '/api/v1/account'
+          credentials: utils.credentials
         server.inject req2, (res2) ->
           p2 = JSON.parse res2.payload
           res2.statusCode.should.equal 200
@@ -54,6 +57,7 @@ describe 'Account', ->
         payload:
           username: 'test'
           password: 'letmein'
+        credentials: utils.credentials
       server.inject req1, (res1) ->
         p1 = JSON.parse res1.payload
         res1.statusCode.should.equal 200
@@ -64,6 +68,7 @@ describe 'Account', ->
         req2 =
           method: 'GET'
           url: '/api/v1/account/' + p1.id
+          credentials: utils.credentials
         server.inject req2, (res2) ->
           p2 = JSON.parse res2.payload
           res2.statusCode.should.equal 200
@@ -78,6 +83,7 @@ describe 'Account', ->
       req =
         method: 'POST'
         url: '/api/v1/account'
+        credentials: utils.credentials
       server.inject req, (res) ->
         res.statusCode.should.equal 400 # Bad Request
         done()
@@ -89,6 +95,7 @@ describe 'Account', ->
         payload:
           username: 'test'
           password: 'pw1'
+        credentials: utils.credentials
       server.inject req, (res1) ->
         server.inject req, (res2) ->
           res1.statusCode.should.equal 200
@@ -100,6 +107,7 @@ describe 'Account', ->
       req =
         method: 'GET'
         url: '/api/v1/account/1'
+        credentials: utils.credentials
       server.inject req, (res) ->
         res.statusCode.should.equal 404 # Not Found
         done()
@@ -108,6 +116,7 @@ describe 'Account', ->
       req =
         method: 'GET'
         url: '/api/v1/account/notreal'
+        credentials: utils.credentials
       server.inject req, (res) ->
         res.statusCode.should.equal 400 # Bad Request
         done()
@@ -120,6 +129,7 @@ describe 'Account', ->
         payload:
           username: 'test'
           password: 'letmein'
+        credentials: utils.credentials
       server.inject req1, (res1) ->
         p1 = JSON.parse res1.payload
         req2 =
@@ -128,6 +138,7 @@ describe 'Account', ->
           payload:
             username: 'test2'
             password: 'letuin'
+          credentials: utils.credentials
         server.inject req2, (res2) ->
           res2.statusCode.should.equal 200
           p2 = JSON.parse res2.payload
@@ -144,6 +155,7 @@ describe 'Account', ->
         payload:
           username: 'test'
           password: 'letmein'
+        credentials: utils.credentials
       server.inject req1, (res1) ->
         p1 = JSON.parse res1.payload
         req2 =
@@ -151,6 +163,7 @@ describe 'Account', ->
           url: '/api/v1/account/' + p1.id
           payload:
             username: 'no-password'
+          credentials: utils.credentials
         server.inject req2, (res2) ->
           res2.statusCode.should.equal 400 # Bad request
           done()
@@ -162,6 +175,7 @@ describe 'Account', ->
         payload:
           username: 'usr'
           password: 'pass'
+        credentials: utils.credentials
       server.inject req, (res) ->
         res.statusCode.should.equal 400 # Bad request
         done()
@@ -173,11 +187,13 @@ describe 'Account', ->
         payload:
           username: 'user'
           password: 'pass'
+        credentials: utils.credentials
       server.inject req, (res) ->
         res.statusCode.should.equal 404
         req2 =
           method: 'GET'
           url: '/api/v1/account/1'
+          credentials: utils.credentials
         server.inject req2, (res2) ->
           res2.statusCode.should.equal 404
           done()
@@ -190,17 +206,20 @@ describe 'Account', ->
         payload:
           username: 'user'
           password: 'letmein'
+        credentials: utils.credentials
       server.inject req1, (res1) ->
         p1 = JSON.parse res1.payload
         req2 =
           method: 'DELETE'
           url: '/api/v1/account/' + p1.id
+          credentials: utils.credentials
         server.inject req2, (res2) ->
           res2.statusCode.should.equal 204 # No Content
           res2.payload.should.be.empty()
           req3 =
             method: 'GET'
             url: '/api/v1/account'
+            credentials: utils.credentials
           server.inject req3, (res3) ->
             res3.statusCode.should.equal 200
             JSON.parse(res3.payload).should.be.an.Array
@@ -211,6 +230,7 @@ describe 'Account', ->
       req =
         method: 'DELETE'
         url: '/api/v1/account/not-real'
+        credentials: utils.credentials
       server.inject req, (res) ->
         res.statusCode.should.equal 400 # Bad Request
         done()
@@ -219,6 +239,7 @@ describe 'Account', ->
       req =
         method: 'DELETE'
         url: '/api/v1/account/1'
+        credentials: utils.credentials
       server.inject req, (res) ->
         res.statusCode.should.equal 404 # Not Found
         done()

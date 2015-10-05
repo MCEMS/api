@@ -8,8 +8,7 @@ server.connection
 
 server.register require('./bookshelf'), (err) ->
   console.error 'Error registering bookshelf:', err if err
-  require('./auth')(server)
+  require('./auth/routes')(server)
   require('./api/v1')(server)
 
 module.exports = server
-

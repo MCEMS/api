@@ -1,9 +1,6 @@
 require 'coffee-script'
 
-Joi = require 'joi'
-Bcrypt = require 'bcrypt'
 JWT = require 'jsonwebtoken'
-Boom = require 'boom'
 SHA1 = require 'sha-1'
 
 JWS_SECRET = process.env.TOKEN_SIGNING_SECRET or '123456'
@@ -26,22 +23,30 @@ fingerprint = (request) ->
   sha = SHA1(ua + lang)
   sha.substr 0, 7
 
+# Generates a token containing the specified subject, scopes, and browser
+# fingerprint.
+#
+# This method should never be called externally, but is exposed for testing.
+_generateTokenRaw = (subject, scopes, fingerprint) ->
+  JWT.sign
+    scope: scopes
+    f: fingerprint
+  , JWS_SECRET,
+    expiresInSeconds: JWS_TTL
+    subject: subject
+
 # Returns an object containing the generated token and
 # the number of seconds it expires in.
 generateToken = (account, request) ->
   scopes = []
   account.related('scopes').forEach (scope) ->
     scopes.push scope.get('key')
-  token = JWT.sign
-    scope: scopes
-    f: fingerprint(request)
-  , JWS_SECRET,
-    expiresInSeconds: JWS_TTL
-    subject: account.id
-
+  fingerprint = fingerprint request
+  token = _generateTokenRaw account.id, scopes, fingerprint
   return {
     token: token
     expiresInSeconds: JWS_TTL
+    scope: scopes
   }
 
 # Used by hapi-auth-jwt to validate a token.
@@ -61,42 +66,9 @@ validateToken = (request, token, cb) ->
     err = true
   cb err, success, credentials
 
-module.exports = (server) ->
-  Account = server.plugins['bookshelf']['Account']
-
-  server.register require('hapi-auth-jwt'), (err) ->
-    console.error err if err
-    server.auth.strategy 'token', 'jwt', 'required',
-      key: JWS_SECRET
-      validateFunc: validateToken
-
-  server.route
-    method: 'POST'
-    path: '/auth/key'
-    config:
-      auth: false
-      validate:
-        payload:
-          username: Joi.string().required()
-          password: Joi.string().required()
-    handler: (request, reply) ->
-      new Account
-        username: request.payload.username
-      .fetch
-        withRelated: ['scopes']
-      .then (acc) ->
-        if acc
-          Bcrypt.compare request.payload.password, acc.get('password'), (err, valid) ->
-            if err
-              reply Boom.badImplementation()
-              console.error err
-            else
-              if valid
-                reply generateToken(acc, request)
-              else
-                reply Boom.unauthorized()
-        else
-          reply Boom.unauthorized()
-      .catch (err) ->
-        reply Boom.badImplementation()
-        console.error err
+module.exports.JWS_SECRET = JWS_SECRET
+module.exports.JWS_TTL = JWS_TTL
+module.exports.fingerprint = fingerprint
+module.exports._generateTokenRaw = _generateTokenRaw
+module.exports.generateToken = generateToken
+module.exports.validateToken = validateToken

@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "description": "The MCEMS API",
   "scripts": {
-    "test": "gulp",
-    "postinstall": "knex migrate:latest",
+    "test": "gulp test",
+    "postinstall": "gulp migrate",
     "start": "coffee lib/"
   },
   "repository": {

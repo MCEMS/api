@@ -10,12 +10,33 @@ gulp.task('lint', function() {
     .pipe(coffeelint.reporter('fail'));
 });
 
-gulp.task('test', function() {
+gulp.task('test', [ 'migrate' ], function() {
   return gulp.src('./tests/*.coffee')
     .pipe(mocha())
+    .once('end', function() {
+      process.exit(0);
+    })
     .once('error', function() {
       process.exit(1);
     });
+});
+
+gulp.task('migrate', function() {
+  var env = process.env.NODE_ENV || 'development';
+  var config = require('./knexfile')[env];
+  var knex = require('knex')(config);
+  return knex.migrate.latest().then(function() {
+    return knex.destroy();
+  });
+});
+
+gulp.task('seed', [ 'migrate' ], function() {
+  var env = process.env.NODE_ENV || 'development';
+  var config = require('./knexfile')[env];
+  var knex = require('knex')(config);
+  return knex.seed.run().then(function() {
+    return knex.destroy();
+  });
 });
 
 gulp.task('default', [ 'lint', 'test' ], function() {

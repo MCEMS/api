@@ -8,12 +8,20 @@ bookshelf = require('bookshelf')(knex)
 Person = bookshelf.Model.extend
   tableName: 'Person'
 
+Scope = bookshelf.Model.extend
+  tableName: 'Scope'
+
 Account = bookshelf.Model.extend
   tableName: 'Account'
+  scopes: ->
+    this.belongsToMany Scope, 'Account_Scope', 'account_id', 'scope_id'
+  person: ->
+    this.belongsTo Person, 'APIUser', 'account_id', 'person_id'
 
 module.exports.register = (server, options, next) ->
   server.expose 'bookshelf', bookshelf
   server.expose 'Person', Person
+  server.expose 'Scope', Scope
   server.expose 'Account', Account
   next()
 

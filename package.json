@@ -32,6 +32,7 @@
     "jsonwebtoken": "^5.0.5",
     "knex": "^0.8.6",
     "pg": "^4.4.1",
+    "postmark": "^1.2.1",
     "sha-1": "^0.1.1"
   },
   "devDependencies": {

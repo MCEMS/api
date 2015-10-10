@@ -11,4 +11,6 @@ server.register require('./bookshelf'), (err) ->
   require('./auth/routes')(server)
   require('./api/v1')(server)
 
+server.ext('onPreResponse', require('hapi-cors-headers'));
+
 module.exports = server

@@ -2,9 +2,10 @@ module.exports = {
   docker: {
     client: 'postgresql',
     connection: {
-      database: 'mcems',
+      host: 'postgres',
       user: 'mcems',
-      password: 'mcems'
+      password: 'mcems',
+      database: 'mcems'
     },
     pool: {
       min: 1,

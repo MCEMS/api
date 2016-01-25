@@ -1,31 +1,15 @@
 module.exports = {
-
-  development: {
+  docker: {
     client: 'postgresql',
     connection: {
-      database: 'mcems_development',
-      user: 'postgres',
-      password: 'postgres'
+      host: 'postgres',
+      user: 'mcems',
+      password: 'mcems',
+      database: 'mcems'
     },
     pool: {
-      min: 2,
-      max: 15
-    },
-    migrations: {
-      tableName: 'knex_migrations'
-    }
-  },
-
-  test: {
-    client: 'postgresql',
-    connection: {
-      database: 'mcems_test',
-      user: 'postgres',
-      password: 'postgres'
-    },
-    pool: {
-      min: 2,
-      max: 10
+      min: 1,
+      max: 5
     },
     migrations: {
       tableName: 'knex_migrations'
@@ -52,8 +36,8 @@ module.exports = {
     client: 'postgresql',
     connection: process.env.DATABASE_URL,
     pool: {
-      min: 2,
-      max: 15
+      min: 1,
+      max: 5
     },
     migrations: {
       tableName: 'knex_migrations'

@@ -4,3 +4,4 @@ module.exports = (server) ->
   require('./Person')(server)
   require('./Account')(server)
   require('./Alert').addRoutes server
+  require('./active911')(server)

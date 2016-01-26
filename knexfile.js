@@ -8,8 +8,8 @@ module.exports = {
       database: 'mcems'
     },
     pool: {
-      min: 1,
-      max: 5
+      min: 2,
+      max: 9
     },
     migrations: {
       tableName: 'knex_migrations'
@@ -24,8 +24,8 @@ module.exports = {
       password: ''
     },
     pool: {
-      min: 1,
-      max: 5
+      min: 2,
+      max: 9
     },
     migrations: {
       tableName: 'knex_migrations'

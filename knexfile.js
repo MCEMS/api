@@ -7,10 +7,6 @@ module.exports = {
       password: 'mcems',
       database: 'mcems'
     },
-    pool: {
-      min: 2,
-      max: 9
-    },
     migrations: {
       tableName: 'knex_migrations'
     }
@@ -23,10 +19,6 @@ module.exports = {
       user: 'postgres',
       password: ''
     },
-    pool: {
-      min: 2,
-      max: 9
-    },
     migrations: {
       tableName: 'knex_migrations'
     }
@@ -35,10 +27,6 @@ module.exports = {
   production: {
     client: 'postgresql',
     connection: process.env.DATABASE_URL,
-    pool: {
-      min: 1,
-      max: 5
-    },
     migrations: {
       tableName: 'knex_migrations'
     }

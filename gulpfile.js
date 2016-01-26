@@ -16,7 +16,8 @@ gulp.task('test', [ 'migrate' ], function() {
     .once('end', function() {
       process.exit(0);
     })
-    .once('error', function() {
+    .once('error', function(err) {
+      console.error('error', err);
       process.exit(1);
     });
 });

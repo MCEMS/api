@@ -4,7 +4,7 @@ JWT = require 'jsonwebtoken'
 SHA1 = require 'sha-1'
 
 JWS_SECRET = process.env.TOKEN_SIGNING_SECRET or '123456'
-JWS_TTL = 1800
+JWS_TTL = 1800 # seconds
 
 # Rudimentary browser fingerprinting to counter session hijacking
 #
@@ -32,7 +32,7 @@ _generateTokenRaw = (subject, scopes, fp) ->
     scope: scopes
     f: fp
   , JWS_SECRET,
-    expiresInSeconds: JWS_TTL
+    expiresIn: JWS_TTL
     subject: subject
 
 # Returns an object containing the generated token and

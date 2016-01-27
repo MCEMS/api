@@ -61,6 +61,7 @@ module.exports = (server) ->
       getCachedDeviceName(rawResponse.device.id).then (name) ->
         response =
             name: name
+            deviceId: rawResponse.device.id
             response: rawResponse.response
             timestamp: rawResponse.timestamp
         fulfill response

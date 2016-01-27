@@ -9,6 +9,7 @@
   },
   "addons": [
     "heroku-postgresql",
+    "heroku-redis",
     "postmark",
     "papertrail"
   ]

@@ -1,0 +1,10 @@
+{
+  "db": {
+    "host": "postgres",
+    "database": "mcems",
+    "username": "mcems",
+    "password": "mcems",
+    "name": "db",
+    "connector": "postgresql"
+  }
+}

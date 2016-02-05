@@ -1,6 +1,16 @@
 {
   "name": "MCEMS API",
   "repository": "https://github.com/MCEMS/api",
+  "env": {
+    "ACTIVE911_REFRESH_TOKEN": {
+      "description": "Your Active911 refresh token",
+      "value": "DUMMY TOKEN"
+    },
+    "ACTIVE911_ALERT_EMAIL": {
+      "description": "Your Active911 alert email address",
+      "value": "example@example.com"
+    }
+  },
   "buildpacks": [
     {
       "url": "https://github.com/strongloop/strongloop-buildpacks.git"

@@ -1,6 +1,11 @@
 {
   "name": "MCEMS API",
   "repository": "https://github.com/MCEMS/api",
+  "buildpacks": [
+    {
+      "url": "https://github.com/strongloop/strongloop-buildpacks.git"
+    }
+  ],
   "addons": [
     "heroku-postgresql",
     "heroku-redis",

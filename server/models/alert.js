@@ -33,11 +33,11 @@ var getAlert = function(alert) {
     alert.info = 'Nothing further';
   }
 
-  var message = 'CALL: ' + alert.type + '\n'
-    + 'PLACE: ' + alert.location + '\n'
-    + 'ADDR: ' + alert.address + '\n'
-    + 'CITY: ' + alert.city + '\n'
-    + 'INFO: ' + alert.info + '\n';
+  var message = 'CALL: ' + alert.type + '\n' +
+    'PLACE: ' + alert.location + '\n' +
+    'ADDR: ' + alert.address + '\n' +
+    'CITY: ' + alert.city + '\n' +
+    'INFO: ' + alert.info + '\n';
 
   return message;
 };

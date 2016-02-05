@@ -13,13 +13,10 @@ var REDIS_ALERT_EXPIRATION = 30;
 var REDIS_DEVICE_EXPIRATION = 60 * 60 * 24;
 
 module.exports = function(server) {
-  if (process.env.NODE_ENV === 'production') {
-    server.set('active911', new Active911.RefreshClient(process.env.ACTIVE911_REFRESH_TOKEN));
-    server.set('redis', Redis.createClient(process.env.REDIS_URL));
-  } else {
-    server.set('active911', new Active911.RefreshClient('DUMMY TOKEN'));
-    server.set('redis', Redis.createClient('redis://redis:6379'));
-  }
+  server.set('active911',
+    new Active911.RefreshClient(process.env.ACTIVE911_REFRESH_TOKEN)
+  );
+  server.set('redis', Redis.createClient(process.env.REDIS_URL));
 
   var active911 = server.get('active911');
   var redis = server.get('redis');
@@ -37,14 +34,14 @@ module.exports = function(server) {
             }
           });
         } else {
-          active911.getAlerts({ alert_days: 2 }).then(function(realAlerts) {
+          active911.getAlerts({ 'alert_days': 2 }).then(function(realAlerts) {
             realAlerts.map(function(alert) {
               console.log('adding alert id to cache:', alert.id);
               redis.sadd(REDIS_ALERTS_KEY, alert.id);
             });
             redis.expire(REDIS_ALERTS_KEY, REDIS_ALERTS_EXPIRATION);
             fulfill(realAlerts.map(function(alert) {
-              return alert.id
+              return alert.id;
             }));
           }).catch(function(err) {
             reject(err);

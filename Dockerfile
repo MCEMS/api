@@ -3,11 +3,11 @@ MAINTAINER Ben Burwell <ben@benburwell.com>
 
 # set our environment (used for db connection)
 ENV NODE_ENV=docker
-ENV TOKEN_SIGNING_SECRET=n823b98ubwq3r
+ENV REDIS_URL="redis://redis:6379"
+ENV ACTIVE911_REFRESH_TOKEN="Dummy Token"
 
 # install some stuff we need no matter what
-RUN npm install -g coffee-script
-RUN npm install -g gulp
+RUN npm install -g strongloop
 
 # cache our dependencies, these will only be updated if package.json changes
 COPY package.json /tmp/package.json
@@ -20,5 +20,5 @@ COPY . /app
 
 EXPOSE 3000
 
-CMD npm start
+CMD slc run
 

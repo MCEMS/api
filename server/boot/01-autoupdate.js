@@ -4,7 +4,8 @@ module.exports = function(server) {
     'AccessToken',
     'ACL',
     'RoleMapping',
-    'Role'
+    'Role',
+    'Person'
   ];
   server.dataSources.db.isActual(tables, function(err, actual) {
     if (!actual) {

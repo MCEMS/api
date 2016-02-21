@@ -36,5 +36,9 @@
   "Alert": {
     "dataSource": null,
     "public": true
+  },
+  "Person": {
+    "dataSource": "db",
+    "public": true
   }
 }

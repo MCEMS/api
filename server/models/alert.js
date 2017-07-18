@@ -1,23 +1,22 @@
-var Postmark = require('postmark');
-
-var postmarkClientStub = {
-  sendEmail: function(message, done) {
-    console.log('-----OUTBOUND EMAIL-----');
-    console.log(message.TextBody);
-    console.log('------------------------');
-    done(null, {
-      ErrorCode: 0,
-      Message: 'OK',
-      MessageId: '0',
-      SubmittedAt: '2010-11-26T12:01:05.1794748-05:00',
-      To: message.To || ''
-    });
-  }
+var sendgridClientStub = {
+  emptyRequest: function(msg) {
+    console.log('-----SENDGRID REQUEST-----');
+    console.log(JSON.stringify(msg));
+    console.log('-----END SENDGRID REQUEST-----');
+    return msg;
+  },
+  API: function(req, done) {
+    console.log('-----SENDGRID API-----');
+    console.log(JSON.stringify(req));
+    console.log('-----END SENDGRID API-----');
+    done(undefined, req);
+  },
 };
 
-var postmarkClient = (
+var helper = require('sendgrid').mail;
+var sg = (
   (process.env.NODE_ENV === 'production')?
-  new Postmark.Client(process.env.POSTMARK_API_KEY) : postmarkClientStub
+  require('sendgrid')(process.env.SENDGRID_API_KEY) : sendgridClientStub
 );
 
 // Convert an object into a string message for email sending
@@ -76,11 +75,17 @@ module.exports = function(Alert) {
     ) {
       done(new Error('Alert type and location must be specified'));
     } else {
-      postmarkClient.sendEmail({
-        'From': 'noreply@bergems.org',
-        'To': process.env.ACTIVE911_ALERT_EMAIL,
-        'TextBody': getAlert(alert)
-      }, done);
+      var fromEmail = new helper.Email('noreply@bergems.org');
+      var toEmail = new helper.Email(process.env.ACTIVE911_ALERT_EMAIL);
+      var subject = '';
+      var content = new helper.Content('text/plain', getAlert(alert));
+      var mail = new helper.Mail(fromEmail, subject, toEmail, content);
+      var request = sg.emptyRequest({
+        method: 'POST',
+        path: '/v3/mail/send',
+        body: mail.toJSON(),
+      });
+      sg.API(request, done);
     }
   };
 

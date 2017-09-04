@@ -1,23 +1,22 @@
 var sendgridClientStub = {
-  emptyRequest: function(msg) {
-    console.log('-----SENDGRID REQUEST-----');
-    console.log(JSON.stringify(msg));
-    console.log('-----END SENDGRID REQUEST-----');
-    return msg;
+  setApiKey: function(key) {
+    // stub -- do nothing
   },
-  API: function(req, done) {
-    console.log('-----SENDGRID API-----');
-    console.log(JSON.stringify(req));
-    console.log('-----END SENDGRID API-----');
-    done(undefined, req);
+  send: function(msg) {
+    return new Promise(function(resolve, reject) {
+      console.log('-----SENDGRID API-----');
+      console.log(JSON.stringify(msg));
+      console.log('-----END SENDGRID API-----');
+      resolve();
+    });
   },
 };
 
-var helper = require('sendgrid').mail;
 var sg = (
-  (process.env.NODE_ENV === 'production')?
-  require('sendgrid')(process.env.SENDGRID_API_KEY) : sendgridClientStub
+  (process.env.NODE_ENV === 'production') ?
+  require('@sendgrid/mail') : sendgridClientStub
 );
+sg.setApiKey(process.env.SENDGRID_API_KEY);
 
 // Convert an object into a string message for email sending
 // options.location and options.type are required -- all others are optional
@@ -75,17 +74,17 @@ module.exports = function(Alert) {
     ) {
       done(new Error('Alert type and location must be specified'));
     } else {
-      var fromEmail = new helper.Email('noreply@bergems.org');
-      var toEmail = new helper.Email(process.env.ACTIVE911_ALERT_EMAIL);
-      var subject = '';
-      var content = new helper.Content('text/plain', getAlert(alert));
-      var mail = new helper.Mail(fromEmail, subject, toEmail, content);
-      var request = sg.emptyRequest({
-        method: 'POST',
-        path: '/v3/mail/send',
-        body: mail.toJSON(),
+      var msg = {
+        to: process.env.ACTIVE911_ALERT_EMAIL,
+        from: 'noreply@bergems.org',
+        subject: '',
+        text: getAlert(alert),
+      };
+      sg.send(msg).then(function() {
+        console.log('Message sent!');
+      }).catch(function(err) {
+        console.error('Error sending message', err);
       });
-      sg.API(request, done);
     }
   };
 

@@ -82,8 +82,10 @@ module.exports = function(Alert) {
       };
       sg.send(msg).then(function() {
         console.log('Message sent!');
+        done();
       }).catch(function(err) {
         console.error('Error sending message', err);
+        done(err.toString());
       });
     }
   };

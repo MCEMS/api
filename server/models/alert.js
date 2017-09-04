@@ -5,7 +5,7 @@ var sendgridClientStub = {
   send: function(msg) {
     return new Promise(function(resolve, reject) {
       console.log('-----SENDGRID API-----');
-      console.log(JSON.stringify(req));
+      console.log(JSON.stringify(msg));
       console.log('-----END SENDGRID API-----');
       resolve();
     });
@@ -13,7 +13,8 @@ var sendgridClientStub = {
 };
 
 var sg = (
-  (process.env.NODE_ENV === 'production') ? require('@sendgrid/mail') : sendgridClientStub
+  (process.env.NODE_ENV === 'production') ?
+  require('@sendgrid/mail') : sendgridClientStub
 );
 sg.setApiKey(process.env.SENDGRID_API_KEY);
 

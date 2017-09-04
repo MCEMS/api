@@ -85,6 +85,7 @@ module.exports = function(Alert) {
         done();
       }).catch(function(err) {
         console.error('Error sending message', err);
+        console.error(err.response.body);
         done(err.toString());
       });
     }

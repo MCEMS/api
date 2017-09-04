@@ -9,6 +9,10 @@
     "ACTIVE911_ALERT_EMAIL": {
       "description": "Your Active911 alert email address",
       "value": "example@example.com"
+    },
+    "SENDGRID_API_KEY": {
+      "description": "API Key for SendGrid",
+      "value": "DUMMY TOKEN"
     }
   },
   "buildpacks": [
@@ -19,8 +23,8 @@
   "addons": [
     "heroku-postgresql",
     "heroku-redis",
-    "postmark",
-    "papertrail"
+    "papertrail",
+    "sendgrid"
   ]
 }
 

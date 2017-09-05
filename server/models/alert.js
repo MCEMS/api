@@ -77,7 +77,7 @@ module.exports = function(Alert) {
       var msg = {
         to: process.env.ACTIVE911_ALERT_EMAIL,
         from: 'noreply@bergems.org',
-        subject: '',
+        subject: 'Alert',
         text: getAlert(alert),
       };
       sg.send(msg).then(function() {
